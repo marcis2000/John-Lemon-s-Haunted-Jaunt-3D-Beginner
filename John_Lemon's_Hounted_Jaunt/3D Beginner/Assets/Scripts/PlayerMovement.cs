@@ -13,12 +13,15 @@ public class PlayerMovement : MonoBehaviour
                                   // using camelCase not m_prefix because variable is public
 
     Rigidbody m_Rigidbody;
+    AudioSource m_AudioSource;
+
 
     // Start is called before the first frame update
     void Start()
     {
         m_Animator = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     // FixedUpdathe because OnAnimatorMove works with physics and we don't want conflicts with frames
@@ -35,6 +38,18 @@ public class PlayerMovement : MonoBehaviour
 
         bool isWalking = hasHorizontalInput || hasVerticalInput;
         m_Animator.SetBool("IsWalking", isWalking); // setting the variable stored in m_Animator
+
+        if (isWalking)
+        {
+            if (!m_AudioSource.isPlaying)
+            {
+                m_AudioSource.Play();
+            }
+        }
+        else
+        {
+            m_AudioSource.Stop();
+        }
 
         // vector responsible for turning the front of the character to movement direction, first two are Vector3 start and stop directions
         //  third is change in radians and fourth is magnitude
